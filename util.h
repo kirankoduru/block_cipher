@@ -1,5 +1,7 @@
 
-
+/*
+ * Struct and Enum defines here
+ */
 typedef enum {
     DES_SINGLE = 0,
     DES_DOUBLE,
@@ -22,6 +24,3 @@ typedef enum {
 /*
  * Function defines here
  */
-
-// File handler function.
-int file_opt(char * file_name, char * buffer);
