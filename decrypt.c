@@ -5,6 +5,8 @@
 #include <openssl/des.h>
 #include "util.h"
 
+DES_cblock seed = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10};
+
 int file_opt(char *file_name, char *buffer) {
     char *temp = NULL;
     FILE *file = NULL;
@@ -34,15 +36,14 @@ void des_decryption(unsigned char *key_text, unsigned char *cipher_text) {
     DES_cblock key;
     DES_key_schedule keysched;
     unsigned char output[BLOCK_MAX_BUFFER] = {0};
-    unsigned char *e = output;
 
     if (key == NULL || cipher_text == NULL) {
         ERROR();
         return;
     }
-    printf("%s\n:", cipher_text);
 
     strncpy(key, key_text, KEY_LEN);
+    RAND_seed(seed, sizeof(DES_cblock));
     DES_random_key(&key);
     DES_set_key((DES_cblock *)key, &keysched);
 
