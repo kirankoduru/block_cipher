@@ -1,4 +1,0 @@
-Error: decrypt.c - line 21
-Failed to open file keygen.txt.
-Error: decrypt.c - line 82
-Failed to open keygen.txt.
