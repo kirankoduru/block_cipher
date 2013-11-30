@@ -10,14 +10,14 @@ all: Encryption Keygen Decryption Aes
 Encryption: encryption.o util.o blockcipher.o aes.o
 	$(CC) -o Encryption encryption.o blockcipher.o util.o -lcrypto
 
-Keygen: keygen.o util.o
-	$(CC) -o Keygen keygen.o util.o -lcrypto
+Keygen: keygen.o util.o aes.o
+	$(CC) -o Keygen keygen.o aes.o util.o -lcrypto
 
 Decryption: decryption.o util.o blockcipher.o aes.o
 	$(CC) -o Decryption decryption.o util.o blockcipher.o -lcrypto
 
-Aes: aes.o
-	$(CC) -o Aes aes.o -lcrypto
+Aes: aescipher.o util.o
+	$(CC) -o Aes aescipher.o util.o -lcrypto
 
 encryption.o: blockcipher.h util.h encryption.c 
 	$(CC) $(CFLAGS) encryption.c
@@ -28,8 +28,8 @@ decryption.o: blockcipher.h util.h decryption.c
 blockcipher.o: blockcipher.c
 	$(CC) $(CFLAGS) blockcipher.c
 
-aes.o: aes.c
-	$(CC) $(CFLAGS) aes.c
+aescipher.o: aescipher.c util.c
+	$(CC) $(CFLAGS) aescipher.c util.c
 
 keygen.o: keygen.c
 	$(CC) $(CFLAGS) keygen.c
