@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <openssl/evp.h>
+#include "util.h"
 
 #define AES_BLOCK_SIZE 16
+#define KEYGEN 1
+#define ENCRYPTION 2
+#define DECRYPTION 3
 
 int aes_init(unsigned char *key_data, int key_data_len, unsigned char *salt,
              EVP_CIPHER_CTX *e_ctx, EVP_CIPHER_CTX *d_ctx)
@@ -51,43 +55,74 @@ unsigned char *aes_decrypt(EVP_CIPHER_CTX *e, unsigned char *ciphertext, int *le
 }
 
 int main(int argc, char **argv) {
-
     EVP_CIPHER_CTX en, de;
-
     unsigned int salt[] = {12345, 54321};   /* 8 bytes to salt the key_data during key generation. */
-    unsigned char *key_data;
-    int key_data_len, i;
-    char *input[] = {"a", "abcd", "this is a test", "this is a bigger test", 
-                     "\nWho are you ?\nI am the 'Doctor'.\n'Doctor' who ?\nPrecisely!",
-                     NULL};
+    unsigned char *key_data = NULL;
+    int key_data_len, i, opt = 0;
+    char *key_buffer, *input_text;
 
-    key_data = (unsigned char *)argv[1];
-    key_data_len = strlen(argv[1]);
-  
-    if (aes_init(key_data, key_data_len, (unsigned char *)&salt, &en, &de)) {
+    if (argc < 2) {
+        printf("Failed to parse parameter.");
+        return -1;
+    }
+
+    /* Parse command line parameter */
+    if (strcmp(argv[1], "key") == 0) {
+        opt = KEYGEN;
+    } else if (strcmp(argv[1], "encryption") == 0) {
+        opt = ENCRYPTION;
+    } else if (strcmp(argv[1], "decryption") == 0) {
+        opt = DECRYPTION;
+    } else {
+        printf("Failed to parse parameter.");
+        return -1;
+    }
+
+    /* Generate key */
+    if (opt == KEYGEN) {
+        key_data = (unsigned char *)argv[2];
+        key_data_len = strlen(argv[2]);
+
+        if (aes_init(key_data, key_data_len, (unsigned char *)&salt, &en, &de)) {
+            return -1;
+        } else {
+            printf("[%s]\n", key_data);
+            return 0;
+        }
+    }
+
+    if (argc == 4) {
+        key_buffer = (char *) malloc(sizeof(char) * BLOCK_MAX_BUFFER);
+        (void)file_opt(argv[2], key_buffer);
+
+        input_text = (char *) malloc(sizeof(char) * BLOCK_MAX_BUFFER);
+        (void)file_opt(argv[3], input_text);
+    }
+
+    key_data_len = strlen(key_buffer);
+    if (aes_init((unsigned char *)key_buffer, key_data_len, (unsigned char *)&salt, &en, &de)) {
+        free(key_buffer);
+        free(input_text);
         printf("Couldn't initialize AES cipher\n");
         return -1;
     }
 
-    /* encrypt and decrypt each input string and compare with the original */
-    for (i = 0; input[i]; i++) {
-        char *plaintext;
-        unsigned char *ciphertext;
-        int olen, len;
-    
-        olen = len = strlen(input[i])+1;
-    
-        ciphertext = aes_encrypt(&en, (unsigned char *)input[i], &len);
-        plaintext = (char *)aes_decrypt(&de, ciphertext, &len);
+    int len = strlen(input_text) + 1;
 
-        if (strncmp(plaintext, input[i], olen)) 
-            printf("FAIL: enc/dec failed for \"%s\"\n", input[i]);
-        else 
-            printf("OK: enc/dec ok for \"%s\"\n", plaintext);
-    
+    if (opt == ENCRYPTION) {
+        unsigned char *ciphertext = NULL;
+        ciphertext = aes_encrypt(&en, (unsigned char *)input_text, &len);
+        printf("%s", ciphertext);
         free(ciphertext);
+    } else if (opt == DECRYPTION) {
+        char *plaintext = NULL;
+        plaintext = (char *)aes_decrypt(&de, input_text, &len);
+        printf("%s", plaintext);
         free(plaintext);
     }
+
+    free(key_buffer);
+    free(input_text);
 
     EVP_CIPHER_CTX_cleanup(&en);
     EVP_CIPHER_CTX_cleanup(&de);
