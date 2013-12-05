@@ -42,9 +42,9 @@ int main(int argc, char **argv) {
     }
 
     key_len = strlen(key_buffer);
-    if (mode == SINGLE_OPT && key_len > SINGLE_KEY_LEN + 1
-        || mode == DOUBLE_OPT && key_len > DOUBLE_KEY_LEN + 1
-        || mode == TRIPLE_OPT && key_len > TRIPLE_KEY_LEN + 1) {
+    if (((mode == SINGLE_OPT) && (key_len > SINGLE_KEY_LEN + 1))
+        || (mode == DOUBLE_OPT && key_len > DOUBLE_KEY_LEN + 1)
+        || (mode == TRIPLE_OPT && key_len > TRIPLE_KEY_LEN + 1)) {
         ERROR();
         free(key_buffer);
         return BLOCK_ERR;

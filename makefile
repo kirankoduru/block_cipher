@@ -2,7 +2,7 @@
 CC=gcc
 
 # variable CFLAGS will be the options to use
-CFLAGS=-c -wall
+CFLAGS=-c -Wall
 
 
 all: Encryption Keygen Decryption Aes
