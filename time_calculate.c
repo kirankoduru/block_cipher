@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 
-void main()
+int main()
 {
 	clock_t begin,end;
 	double time_spent;
@@ -19,4 +19,6 @@ void main()
 	time_spent = (double) (begin - end) / CLOCKS_PER_SEC ;
 
 	printf("%f \n", time_spent);
+
+	return 0;
 }
