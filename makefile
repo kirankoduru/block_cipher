@@ -7,13 +7,13 @@ CFLAGS=-c -Wall
 
 all: Encryption Keygen Decryption Aes
 
-Encryption: encryption.o util.o blockcipher.o aes.o
-	$(CC) -o Encryption encryption.o blockcipher.o util.o -lcrypto
+Encryption: encryption.o util.o blockcipher.o
+	$(CC) -o Encryption encryption.o blockcipher.o util.o  -lcrypto
 
-Keygen: keygen.o util.o aes.o
-	$(CC) -o Keygen keygen.o aes.o util.o -lcrypto
+Keygen: keygen.o util.o
+	$(CC) -o Keygen keygen.o util.o -lcrypto
 
-Decryption: decryption.o util.o blockcipher.o aes.o
+Decryption: decryption.o util.o blockcipher.o
 	$(CC) -o Decryption decryption.o util.o blockcipher.o -lcrypto
 
 Aes: aescipher.o util.o

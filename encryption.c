@@ -5,10 +5,16 @@
 #include <openssl/des.h>
 #include "util.h"
 #include "blockcipher.h"
+#include <time.h>
 
 int main(int argc, char **argv) {
     int ret, mode, decrypt_mode, key_len;
     char *opt, *key_file = NULL, *plaintext_file = NULL, *key_buffer = NULL, *plain_text = NULL;
+
+    // to track the time needed for encrypting
+    clock_t begin,end;
+    double time_spent;
+
 
     if (argc < 3) {
         printf("Invalid paramters. Usage: ./Encrypt <key file> <plain text file>\n");
@@ -61,7 +67,21 @@ int main(int argc, char **argv) {
         return BLOCK_ERR;
     }
 
+    // start the clock
+    begin = clock();
+
+    // DES
     des_encryption(key_buffer, plain_text, decrypt_mode);
+
+    // end the clock
+    end = clock();
+
+    // calculate time spent
+    time_spent = (double) (begin - end) / CLOCKS_PER_SEC ;
+
+    // print time spent into new file
+    time_file = fopen('timeAnalysis.txt', "rw+");
+    fwrite(time_spent,sizeof(time_file),1,time_file);
 
     free(key_buffer);
     free(plain_text);
