@@ -1,0 +1,3 @@
+ gcc -o Encryption encryption.c util.c blockcipher.c -lcrypto
+
+ gcc -o Decryption decryption.c util.c blockcipher.c -lcrypto

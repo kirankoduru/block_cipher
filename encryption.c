@@ -5,7 +5,7 @@
 #include <openssl/des.h>
 #include "util.h"
 #include "blockcipher.h"
-#include <time.h>
+#include <sys/time.h>
 
 int main(int argc, char **argv) {
     int ret, mode, decrypt_mode, key_len;
@@ -13,8 +13,8 @@ int main(int argc, char **argv) {
     FILE *time_file = NULL;
 
     // to track the time needed for encrypting
-    clock_t begin,end;
-    double time_spent;
+    struct timeval start, end;
+    long mtime, secs, usecs; 
 
 
     if (argc < 3) {
@@ -69,27 +69,28 @@ int main(int argc, char **argv) {
     }
 
     // start the clock
-    begin = clock();
+    gettimeofday(&start, NULL);
 
     // DES
     des_encryption(key_buffer, plain_text, decrypt_mode);
 
     // end the clock
-    end = clock();
+    gettimeofday(&end, NULL);
 
-    // calculate time spent
-    time_spent = (double) (begin - end) / CLOCKS_PER_SEC ;
+    // calculate time spent in secs, microsecs, millisecs
+    secs  = end.tv_sec  - start.tv_sec;
+    usecs = end.tv_usec - start.tv_usec;
+    mtime = ((secs) * 1000 + usecs/1000.0) + 0.5;
 
     // print time spent into new file
     if((time_file = fopen("timeanalysis.txt", "wb")) == NULL)
     {
         return -1;
     }
-    
-    fprintf(time_file, "%f\n", time_spent);
-    fclose(time_file);
-    
 
+    fprintf(time_file, "%ld usec\n", usecs);
+    fclose(time_file);
+ 
     free(key_buffer);
     free(plain_text);
 
