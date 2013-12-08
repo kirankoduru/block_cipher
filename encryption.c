@@ -10,6 +10,8 @@
 int main(int argc, char **argv) {
     int ret, mode, decrypt_mode, key_len;
     char *opt, *key_file = NULL, *plaintext_file = NULL, *key_buffer = NULL, *plain_text = NULL;
+    char *buff[100];
+    FILE *time_file = NULL;
 
     // to track the time needed for encrypting
     clock_t begin,end;
@@ -80,8 +82,13 @@ int main(int argc, char **argv) {
     time_spent = (double) (begin - end) / CLOCKS_PER_SEC ;
 
     // print time spent into new file
-    time_file = fopen('timeAnalysis.txt', "rw+");
-    fwrite(time_spent,sizeof(time_file),1,time_file);
+    if((time_file = fopen('timeanalysis.txt', "w") == NULL))
+    {
+        return -1;
+    }
+    
+    fprintf(time_file, "%d\n", time_spent);
+    fclose(time_file);
 
     free(key_buffer);
     free(plain_text);
