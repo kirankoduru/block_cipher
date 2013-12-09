@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
         if (aes_init(key_data, key_data_len, (unsigned char *)&salt, &en, &de)) {
             return -1;
         } else {
-            printf("[%s]\n", key_data);
+            output(key_data);
             return 0;
         }
     }
@@ -112,12 +112,12 @@ int main(int argc, char **argv) {
     if (opt == ENCRYPTION) {
         unsigned char *ciphertext = NULL;
         ciphertext = aes_encrypt(&en, (unsigned char *)input_text, &len);
-        printf("%s", ciphertext);
+        output(ciphertext);
         free(ciphertext);
     } else if (opt == DECRYPTION) {
         char *plaintext = NULL;
         plaintext = (char *)aes_decrypt(&de, input_text, &len);
-        printf("%s", plaintext);
+        output(plaintext);
         free(plaintext);
     }
 
