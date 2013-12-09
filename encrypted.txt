@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 [ZÇT©ZzûsÑ½ÚÚZè÷|‹KìN:‡UÍ°DâÖ¿ûœG²0»°¦3¶˜“³ì ¦9ªÎ‚hPú’êqì0ë™4îè@Ëßf-ù‚5Ù‡˜Wä¡}ÛÃã]
+=======
+Error: util.c - line 19
+Failed to open file plain.txt.
+Error: encryption.c - line 64
+Failed to load plaintext plain.txt.
+>>>>>>> 0ccd9c0491a5bc95eda1a2fc3c3fb3c36d018d94

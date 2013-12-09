@@ -10,6 +10,12 @@
 int main(int argc, char **argv) {
     int ret, mode, decrypt_mode, key_len;
     char *opt, *key_file = NULL, *encrypted_file = NULL, *key_buffer = NULL, *cipher_text = NULL;
+    FILE *time_file = NULL;
+
+    // to track the time needed for encrypting
+    struct timeval start, end;
+    long mtime, secs, usecs; 
+
 
     if (argc < 3) {
         printf("Invalid paramters. Usage: ./Encrypt <key file> <plain text file>\n");
@@ -63,7 +69,27 @@ int main(int argc, char **argv) {
         return BLOCK_ERR;
     }
 
+     // start the clock
+    gettimeofday(&start, NULL);
+
     des_decryption(key_buffer, cipher_text, decrypt_mode);
+
+    // end the clock
+    gettimeofday(&end, NULL);
+
+    // calculate time spent in secs, microsecs, millisecs
+    secs  = end.tv_sec  - start.tv_sec;
+    usecs = end.tv_usec - start.tv_usec;
+    mtime = ((secs) * 1000 + usecs/1000.0) + 0.5;
+
+    // print time spent into new file
+    if((time_file = fopen("timeanalysis.txt", "wb")) == NULL)
+    {
+        return -1;
+    }
+
+    fprintf(time_file, "%ld usec\n", usecs);
+    fclose(time_file);
 
     free(key_buffer);
     free(cipher_text);
