@@ -1,4 +1,0 @@
-Error: util.c - line 19
-Failed to open file plain.txt.
-Error: encryption.c - line 57
-Failed to load plaintext plain.txt.
