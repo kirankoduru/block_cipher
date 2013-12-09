@@ -142,7 +142,8 @@ void des_encryption(unsigned char *key_text, unsigned char *plain_text, CRYPT_MO
     } else if (mode == DES_ENCRYPT_TRIPLE) {
         des_triple(key_text, plain_text, buffer, DES_ENCRYPT);
     }
-    printf("[%s]\n", buffer);
+
+    output(buffer);
     free(buffer);
 
     return;
@@ -165,7 +166,7 @@ void des_decryption(unsigned char *key_text, unsigned char *cipher, CRYPT_MODE m
     } else if (mode == DES_DECRYPT_TRIPLE) {
         des_triple(key_text, cipher, buffer, DES_DECRYPT);
     }
-    printf("%s\n", buffer);
+    output(buffer);
     free(buffer);
 
     return;

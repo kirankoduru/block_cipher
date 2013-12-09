@@ -6,31 +6,40 @@
 #include "util.h"
 
 int file_opt(char *file_name, char *buffer) {
+    int number = 0;
+    FILE *fp = NULL;
     char *temp = NULL;
-    FILE *file = NULL;
 
-    if (file_name == NULL || buffer == NULL) {
-        ERROR();
+    if ((file_name == NULL) || (buffer == NULL)) {
         return BLOCK_ERR;
     }
 
-    file = fopen(file_name, "r");
-    if (file == 0) {
-        ERROR();
-        printf("Failed to open file %s.\n", file_name);
+    if ((fp = fopen(file_name, "r")) == NULL) {
         return BLOCK_ERR;
     }
-    
-    while ((temp = fgetc(file)) != EOF) {
-        if (temp == '[' || temp == ']') {
-        } else {
-            *buffer++ = temp;
-        }
+
+    fscanf(fp, "%d", &number);
+    temp = fgetc(fp);
+    int i = 0;
+    while ((temp = fgetc(fp)) != EOF && i < number) {
+        *buffer++ = temp;
+        i++;
     }
-    
-    fclose(file);
-    
+
+    fclose(fp);
+
     return BLOCK_OK;
+}
+
+void output(char *content) {
+    if (content == NULL) {
+        return;
+    }
+
+    printf("%d\n", strlen(content));
+    printf("%s", content);
+
+    return;
 }
 
 int opt_mode(char *str) {

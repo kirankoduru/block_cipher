@@ -9,7 +9,8 @@ int main(void) {
     DES_cblock key;
 
     DES_string_to_key("pass", &key);
-    printf("[%s]\n", &key);
+    printf("%d\n", strlen(key));
+    printf("%s", key);
 
     return BLOCK_OK;
 }
